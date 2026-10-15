@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Compress JPG, PNG and WebP images online for free. Adjust image quality and download smaller images directly in your browser.">
+<meta name="theme-color" content="#2563eb">
+<title>Free Image Compressor Online</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fc;color:#172033}
+header{background:#fff;padding:18px 16px;border-bottom:1px solid #e5eaf2}
+nav,.wrap{max-width:850px;margin:auto}
+.brand{font-size:21px;font-weight:800;color:#2458d3}
+.brand span{color:#111827}
+.hero{text-align:center;padding:32px 16px 18px}
+.hero h1{font-size:clamp(28px,6vw,42px);margin:0 0 12px}
+.hero p{color:#667085;line-height:1.6;margin:0}
+.wrap{padding:12px 15px 35px}
+.card{background:white;border:1px solid #e4e9f2;border-radius:18px;padding:22px;box-shadow:0 8px 28px #15264b0b}
+.upload{display:block;border:2px dashed #9bb6f5;border-radius:14px;padding:28px 12px;text-align:center;background:#f7f9ff;cursor:pointer}
+.upload strong{display:block;margin:9px 0;font-size:18px}
+.upload small{color:#667085;line-height:1.6}
+input[type=file]{position:absolute;width:1px;height:1px;opacity:0}
+.settings{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+label{font-weight:700;font-size:14px}
+select{display:block;width:100%;padding:12px;margin-top:9px;border:1px solid #d5dbea;border-radius:9px;background:white;font-size:15px}
+.rangehead{display:flex;justify-content:space-between;gap:8px;align-items:center}
+input[type=range]{width:100%;margin-top:18px;accent-color:#2563eb}
+button,.download{display:block;width:100%;border:0;border-radius:10px;padding:14px;font-size:16px;font-weight:700;text-align:center;text-decoration:none;cursor:pointer}
+.primary{background:#2563eb;color:white;margin-top:23px}
+.primary:disabled{opacity:.55;cursor:not-allowed}
+.download{background:#13834a;color:white;margin-top:12px}
+button:focus-visible,a:focus-visible,label:focus-within{outline:3px solid #9bb6f5;outline-offset:3px}
+#status{margin-top:16px;text-align:center;line-height:1.6;color:#475467}
+#result{margin-top:22px}
+.preview{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.preview img{width:100%;max-height:270px;object-fit:contain;background:#f1f4f9;border-radius:10px}
+.preview p{font-size:13px;overflow-wrap:anywhere}
+.stats{background:#f0fdf4;padding:14px;border-radius:10px;margin-top:14px;line-height:1.8;color:#166534}
+h2{font-size:19px}
+.info{margin-top:25px;line-height:1.7;color:#475467}
+.info h2{color:#172033}
+footer{text-align:center;padding:22px;color:#667085;font-size:13px}
+[hidden]{display:none!important}
+@media(max-width:520px){.settings{grid-template-columns:1fr}.card{padding:16px}.hero{padding-top:26px}}
+</style>
+</head>
+<body>
+<header><nav><div class="brand">✦ <span>Free</span> Image Compressor</div></nav></header>
+
+<section class="hero">
+<h1>Compress Images Online</h1>
+<p>Reduce image file size for free. Simple, fast and private.<br>No account or upload to a server required.</p>
+</section>
+
+<main class="wrap">
+<section class="card">
+<label class="upload" for="file">
+<span style="font-size:35px">🖼️</span>
+<strong>Choose an image</strong>
+<small>Tap here to select a JPG, PNG or WebP image<br>from your phone or computer.</small>
+</label>
+<input id="file" type="file" accept="image/jpeg,image/png,image/webp">
+
+<div class="settings">
+<div>
+<div class="rangehead">
+<label for="quality">Image quality</label>
+<strong id="qualityText">75%</strong>
+</div>
+<input id="quality" type="range" min="10" max="95" value="75">
+<small style="color:#667085">Lower quality usually means a smaller file.</small>
+</div>
+<div>
+<label for="format">Output format</label>
+<select id="format">
+<option value="image/webp">WebP (recommended)</option>
+<option value="image/jpeg">JPG</option>
+</select>
+<small style="color:#667085;display:block;margin-top:8px">JPG does not preserve transparency.</small>
+</div>
+</div>
+
+<button class="primary" id="compress" disabled>Compress Image</button>
+<p id="status" role="status" aria-live="polite">Choose an image to get started.</p>
+
+<section id="result" hidden>
+<h2>Image comparison</h2>
+<div class="preview">
+<div><strong>Original</strong><img id="originalPreview" alt="Original image preview"><p id="originalSize"></p></div>
+<div><strong>Compressed</strong><img id="compressedPreview" alt="Compressed image preview"><p id="compressedSize"></p></div>
+</div>
+<div id="stats" class="stats"></div>
+<a id="download" class="download" download="compressed-image.webp">Download compressed image</a>
+</section>
+</section>
+
+<section class="info">
+<h2>How to compress an image</h2>
+<p>1. Select a JPG, PNG or WebP image from your device.</p>
+<p>2. Adjust the quality slider and choose the output format.</p>
+<p>3. Tap Compress Image, compare the file sizes and download the result.</p>
+<h2>Is this image compressor free?</h2>
+<p>Yes. This tool runs in your browser without a paid subscription. Your selected image is processed on your device rather than uploaded to this website's server. Compression results depend on the original image and chosen format.</p>
+</section>
+</main>
+<footer>Free Image Compressor · Free online image tool</footer>
+
+<script>
+const fileInput = document.getElementById('file');
+const quality = document.getElementById('quality');
+const qualityText = document.getElementById('qualityText');
+const format = document.getElementById('format');
+const compressBtn = document.getElementById('compress');
+const statusEl = document.getElementById('status');
+const result = document.getElementById('result');
+let selectedFile = null;
+let originalURL = null;
+let outputURL = null;
+let busy = false;
+
+function sizeText(bytes) {
+  if (bytes < 1024) return bytes + ' bytes';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+}
+function setStatus(message) {
+  statusEl.textContent = message;
+}
+function clearOutput() {
+  if (outputURL) URL.revokeObjectURL(outputURL);
+  outputURL = null;
+  result.hidden = true;
+}
+function updateButton() {
+  compressBtn.disabled = !selectedFile || busy;
+  compressBtn.textContent = busy ? 'Compressing…' : 'Compress Image';
+}
+quality.addEventListener('input', () => {
+  qualityText.textContent = quality.value + '%';
+});
+fileInput.addEventListener('change', () => {
+  clearOutput();
+  selectedFile = fileInput.files && fileInput.files[0];
+  if (originalURL) URL.revokeObjectURL(originalURL);
+  originalURL = null;
+  if (!selectedFile) {
+    updateButton();
+    setStatus('Choose an image to get started.');
+    return;
+  }
+  if (!['image/jpeg','image/png','image/webp'].includes(selectedFile.type)) {
+    selectedFile = null;
+    fileInput.value = '';
+    updateButton();
+    setStatus('Please select a JPG, PNG or WebP image.');
+    return;
+  }
+  if (selectedFile.size > 25 * 1024 * 1024) {
+    selectedFile = null;
+    fileInput.value = '';
+    updateButton();
+    setStatus('Please select an image smaller than 25 MB.');
+    return;
+  }
+  originalURL = URL.createObjectURL(selectedFile);
+  document.getElementById('originalPreview').src = originalURL;
+  document.getElementById('originalSize').textContent = sizeText(selectedFile.size);
+  setStatus('Image selected: ' + selectedFile.name);
+  updateButton();
+});
+
+compressBtn.addEventListener('click', async () => {
+  if (!selectedFile || busy) return;
+  busy = true;
+  updateButton();
+  clearOutput();
+  setStatus('Processing image on your device…');
+
+  try {
+    const image = new Image();
+    image.src = originalURL;
+    await new Promise((resolve, reject) => {
+      image.onload = resolve;
+      image.onerror = () => reject(new Error('The image could not be opened.'));
+    });
+
+    if (!image.naturalWidth || !image.naturalHeight) {
+      throw new Error('This image has invalid dimensions.');
+    }
+    if (image.naturalWidth * image.naturalHeight > 40000000) {
+      throw new Error('This image is too large to process safely on this device.');
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('Canvas is not supported by this browser.');
+
+    const outputType = format.value;
+    if (outputType === 'image/jpeg') {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    ctx.drawImage(image, 0, 0);
+
+    const blob = await new Promise(resolve => {
+      canvas.toBlob(resolve, outputType, Number(quality.value) / 100);
+    });
+    canvas.width = 0;
+    canvas.height = 0;
+
+    if (!blob) throw new Error('Compression failed. Try another image or format.');
+
+    outputURL = URL.createObjectURL(blob);
+    document.getElementById('compressedPreview').src = outputURL;
+    document.getElementById('compressedSize').textContent = sizeText(blob.size);
+
+    const difference = selectedFile.size - blob.size;
+    const percent = Math.round((difference / selectedFile.size) * 100);
+    const stats = document.getElementById('stats');
+
+    if (difference > 0) {
+      stats.textContent = 'Saved ' + sizeText(difference) + ' (' + percent + '% smaller).';
+    } else if (difference < 0) {
+      stats.textContent = 'The output is ' + sizeText(-difference) +
+        ' larger than the original. Try a lower quality or another format.';
+    } else {
+      stats.textContent = 'The output file is approximately the same size as the original.';
+    }
+
+    const extension = outputType === 'image/jpeg' ? 'jpg' : 'webp';
+    const download = document.getElementById('download');
+    download.href = outputURL;
+    download.download = 'compressed-image.' + extension;
+    result.hidden = false;
+    setStatus('Done! Your compressed image is ready.');
+  } catch (error) {
+    setStatus(error.message || 'Something went wrong. Please try again.');
+  } finally {
+    busy = false;
+    updateButton();
+  }
+});
+</script>
+</body>
+</html>
